@@ -23,8 +23,8 @@ $sslWireless = new SSLWireless("SSL_WIRELESS_USERNAME", "SSL_WIRELESS_PASSWORD",
 $client = new Client($sslWireless);
 
 $message = (new Message())
-    ->setRecipient("8801717530114")
-    ->setMessage("Final Testing");
+    ->setRecipient("88XXXXXXXXXXX")
+    ->setMessage("YOUR MESSAGE");
 
 try {
     $r = $client->send([$message]);

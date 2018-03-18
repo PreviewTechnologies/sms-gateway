@@ -1,6 +1,6 @@
 {
     "name": "previewtechs/sms-gateway",
-    "description": "SMS Gateway library in PHP for SSL Wireless Ltd. in Bangladesh.",
+    "description": "SMS Gateway library in PHP. Multiple providers in one library. Happy SMS'ing!",
     "type": "library",
     "license": "MIT",
     "authors": [

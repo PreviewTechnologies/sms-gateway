@@ -2,7 +2,6 @@
 
 namespace Previewtechs\SMSGateway\Providers;
 
-
 use GuzzleHttp\Psr7\Request;
 use Http\Adapter\Guzzle6\Client;
 use Http\Client\HttpClient;
@@ -17,13 +16,13 @@ class SSLWireless implements ProviderInterface
     protected $apiEndpoint = 'http://sms.sslwireless.com/pushapi/dynamic/server.php';
 
     protected $httpClient;
-    protected $userName;
+    protected $username;
     protected $password;
     protected $sid;
 
     public function __construct($userName, $password, $sid)
     {
-        $this->userName = $userName;
+        $this->username = $userName;
         $this->password = $password;
         $this->sid = $sid;
 
@@ -57,6 +56,7 @@ class SSLWireless implements ProviderInterface
      *
      * @return Response
      * @throws \Exception
+     * @throws \Http\Client\Exception
      */
     public function send($messages)
     {
@@ -70,7 +70,7 @@ class SSLWireless implements ProviderInterface
             }
         }
 
-        $postBody = ['user' => $this->userName, 'pass' => $this->password, 'sid' => $this->sid];
+        $postBody = ['user' => $this->username, 'pass' => $this->password, 'sid' => $this->sid];
 
         foreach ($messages as $message) {
 
@@ -101,8 +101,7 @@ class SSLWireless implements ProviderInterface
     protected function buildResponse(ResponseInterface $response)
     {
         $xml = simplexml_load_string($response->getBody());
-        $json = json_encode($xml);
-        $array = json_decode($json, true);
+        $array = json_decode(json_encode($xml), true);
 
         $res = new Response();
 
@@ -110,8 +109,8 @@ class SSLWireless implements ProviderInterface
             throw new \Exception("Failed to process the API request. Response: " . $array['PARAMETER']);
         }
 
-        if ($array['LOGIN'] != "OK") {
-            throw new \Exception("API Autentication failed!");
+        if ($array['LOGIN'] != "SUCCESSFULL") {
+            throw new \Exception("API Authentication failed!");
         }
 
         if ($array['PARAMETER'] === "OK" && $array['LOGIN'] === "SUCCESSFULL") {
@@ -148,12 +147,12 @@ class SSLWireless implements ProviderInterface
     }
 
     /**
-     * @param $sring
+     * @param $string
      *
      * @return string
      */
-    protected function convertToUnicode($sring)
+    protected function convertToUnicode($string)
     {
-        return strtoupper(bin2hex(iconv('UTF-8', 'UCS-2BE', $sring)));
+        return strtoupper(bin2hex(iconv('UTF-8', 'UCS-2BE', $string)));
     }
 }
